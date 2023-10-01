@@ -149,5 +149,5 @@ If this project helps you, you can give a cup of coffee to vk2him being the orig
 
 ## Donation
 If the cFos additions help you, you can give me a cup of coffee as well :-) <br/>
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/domsom)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/DominikSommer)
 <br/><br/>
