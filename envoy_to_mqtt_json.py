@@ -57,8 +57,10 @@ MQTT_PASSWORD = option_dict["MQTT_PASSWORD"]    # If you use an external broker,
 ENVOY_HOST = option_dict["ENVOY_HOST"]  # ** Enter envoy-s IP. Note - use FQDN and not envoy.local if issues connecting 
 ENVOY_USER= option_dict["ENVOY_USER"]
 ENVOY_USER_PASS= option_dict["ENVOY_USER_PASS"]
-USE_FREEDS= option_dict["USE_FREEDS"]
-DEBUG= option_dict["DEBUG"]
+USE_FREEDS= False
+if option_dict["USE_FREEDS"] == "True": USE_FREEDS= True
+DEBUG= False
+if option_dict["DEBUG"] == "True": DEBUG = True
 MQTT_TOPIC_FREEDS = "Inverter/GridWatts"
 ####  End Settings - no changes after this line
 
@@ -372,9 +374,28 @@ def scrape_stream_meters():
                 if DEBUG: print(dt_string, 'stream after != 200:', stream.content)
             else:
                 if is_json_valid(stream.content):
-                    if DEBUG: print(dt_string, 'Json Response:', stream.json())
-                    json_string = json.dumps(stream.json())
+                    response = stream.json()
+                    envoy = {"data": {"solar": {}, "net": {}}}
+                    envoy['data']['solar']['power_w'] = response[0]['activePower']
+                    envoy['data']['solar']['import_wh'] = response[0]['actEnergyDlvd']
+                    envoy['data']['solar']['current_l1'] = response[0]['channels'][0]['current']
+                    envoy['data']['solar']['current_l2'] = response[0]['channels'][1]['current']
+                    envoy['data']['solar']['current_l3'] = response[0]['channels'][2]['current']
+                    envoy['data']['solar']['voltage_l1'] = response[0]['channels'][0]['voltage']
+                    envoy['data']['solar']['voltage_l2'] = response[0]['channels'][1]['voltage']
+                    envoy['data']['solar']['voltage_l3'] = response[0]['channels'][2]['voltage']
+                    envoy['data']['net']['power_w'] = response[1]['activePower']
+                    envoy['data']['net']['import_wh'] = response[1]['actEnergyDlvd']
+                    envoy['data']['net']['export_wh'] = response[1]['actEnergyRcvd']
+                    envoy['data']['net']['current_l1'] = response[1]['channels'][0]['current']
+                    envoy['data']['net']['current_l2'] = response[1]['channels'][1]['current']
+                    envoy['data']['net']['current_l3'] = response[1]['channels'][2]['current']
+                    envoy['data']['net']['voltage_l1'] = response[1]['channels'][0]['voltage']
+                    envoy['data']['net']['voltage_l2'] = response[1]['channels'][1]['voltage']
+                    envoy['data']['net']['voltage_l3'] = response[1]['channels'][2]['voltage']
+                    json_string = json.dumps(envoy)
                     client.publish(topic= MQTT_TOPIC , payload= json_string, qos=0 )
+                    if DEBUG: print(dt_string, 'Json Response:', json_string)
                     if USE_FREEDS: 
                         json_string_freeds = json.dumps(round(stream.json()[1]["activePower"]))
                         if DEBUG: print(dt_string, 'Json freeds:', stream.json()[1]["activePower"])

@@ -1,0 +1,82 @@
+{
+  "rtype":  2,   // 0 = modbus, 1 = http/json, 2 = mqtt/json
+
+  "name": "Enphase Envoy Solar Meter", // as displayed in the config dialog
+  "manufacturer": "Enphase",
+  "dev_type": "enphase_envoy_solar", // will be prefixed by "meter_"
+
+  "delay_accumulated": true,   // false: always read accumulated value, like import_wh / export_wh when reading instantaneous values
+
+  // values used to build the model string
+  "type_designation": {
+    "address": "",
+    "type": "string",
+    "fixed": "Solar Meter"
+  },
+  "version": {
+    "address": "",
+    "type": "string",
+    "fixed": "0.1"
+  },
+  "firmware_version": {
+    "address": "",
+    "type": "string",
+    "fixed": ""
+  },
+  "serial": {
+    "address": "",
+    "type": "string",
+    "fixed": "0"
+  },
+
+  "power_w": {
+    "address": "/envoy",
+    "query": "data.solar.power_w",
+    "type": "float"
+  },
+  "import_wh": {
+    "address": "/envoy",
+    "query": "data.solar.import_wh",
+    "type": "float"
+  },
+  "export_wh": {
+    "address": "/envoy",
+    "query": "data.solar.export_wh",
+    "type": "float"
+  },
+
+  "voltage_l1": {
+    "address": "/envoy",
+    "query": "data.solar.voltage_l1",
+    "type": "float"
+  },
+  "voltage_l2": {
+    "address": "/envoy",
+    "query": "data.solar.voltage_l2",
+    "type": "float"
+  },
+  "voltage_l3": {
+    "address": "/envoy",
+    "query": "data.solar.voltage_l3",
+    "type": "float"
+  },
+
+  "current_l1": {
+    "address": "/envoy",
+    "query": "data.solar.current_l1",
+    "type": "float",
+    "resolution": 1000
+  },
+  "current_l2": {
+    "address": "/envoy",
+    "query": "data.solar.current_l2",
+    "type": "float",
+    "resolution": 1000
+  },
+  "current_l3": {
+    "address": "/envoy",
+    "query": "data.solar.current_l3",
+    "type": "float",
+    "resolution": 1000
+  }
+}
