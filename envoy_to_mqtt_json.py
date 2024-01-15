@@ -405,6 +405,7 @@ def scrape_stream_meters():
                     print(dt_string, 'Invalid Json Response:', stream.content)
         except requests.exceptions.RequestException as e:
             print(dt_string, ' Exception fetching stream data: %s' % e)
+            time.sleep(60)
 
 def scrape_stream():
     serial = serialNumber.encode("utf-8")
