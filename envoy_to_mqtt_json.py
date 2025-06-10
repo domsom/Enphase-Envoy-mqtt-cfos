@@ -26,7 +26,7 @@ import xml.etree.ElementTree as ET
 #disable warnings of self signed certificate https
 urllib3.disable_warnings()
 import paho.mqtt.client as mqtt
-client = mqtt.Client()
+client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 pp = pprint.PrettyPrinter()
 import xml.etree.ElementTree as ET
 import hashlib
@@ -174,7 +174,7 @@ if envoy_version != 5:
     #4: Refused – bad user name or password (MQTT v3.1 broker only)
     #5: Refused – not authorised (MQTT v3.1 broker only
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc, properties):
     """
     Handle connections (or failures) to the broker.
     This is called after the client has received a CONNACK message
@@ -186,6 +186,7 @@ def on_connect(client, userdata, flags, rc):
     3: Refused . server unavailable
     4: Refused . bad user name or password (MQTT v3.1 broker only)
     5: Refused . not authorised (MQTT v3.1 broker only)
+    The properties argument is a Properties object if using MQTT v5, otherwise None.
     """
     if rc == 0:
         print(dt_string,"Connected to %s:%s" % (MQTT_HOST, MQTT_PORT))
@@ -217,7 +218,7 @@ def on_disconnect(client, userdata, rc) :
 def on_log(client, userdata, level, buf) :
     print("{0}".format(buf))
 
-client               = mqtt.Client()
+client               = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect    = on_connect
 #client.on_publish    = on_publish
 client.on_disconnect = on_disconnect
