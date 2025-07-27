@@ -1,0 +1,89 @@
+{
+    "rtype": 2, // 0 = modbus, 1 = http/json, 2 = mqtt
+    "mtype": 4, // 0 = other, 1 = meter, 2 = inverter, 4 = battery
+    
+    "name": "Marstek Venus (Lilygo RS485 MQTT)",
+    "manufacturer": "Marstek",
+    "dev_type": "marstek_lilygors485_mqtt",
+
+    "delay_accumulated": true,
+
+    "type_designation": {
+        "address": "",
+        "type": "string",
+        "fixed": "Battery"
+    },
+    "version": {
+        "address": "",
+        "type": "string",
+        "fixed": "0.1"
+    },
+    "firmware_version": {
+        "address": "marstek/sensor/marstek_firmware_version/state",
+        "type": "string",
+        "regex": ".*"
+    },
+    "serial": {
+        "address": "marstek/sensor/marstek_device_name/state",
+        "type": "string",
+        "regex": ".*"
+    },
+
+    "power_w": {
+        "address": "marstek/sensor/marstek_ac_power/state",
+        "type": "int16",
+        "regex": ".*",
+        "resolution": -1
+    },
+
+    "soc": {
+        "address": "marstek/sensor/marstek_battery_state_of_charge/state",
+        "type": "float",
+        "regex": ".*"
+    },
+
+    "import_wh": {
+        "address": "marstek/sensor/marstek_total_charging_energy/state",
+        "type": "float",
+        "regex": ".*",
+        "resolution": 1000
+    },
+    "export_wh": {
+        "address": "marstek/sensor/marstek_total_discharging_energy/state",
+        "type": "float",
+        "regex": ".*",
+        "resolution": 1000
+    },
+ 
+    "*Remaining Energy (kWh)": {
+        "address": "marstek/sensor/marstek_battery_remaining_capacity/state",
+        "type": "float",
+        "regex": ".*"
+    },
+    "*Internal Temperature (°C)": {
+        "address": "marstek/sensor/marstek_internal_temperature/state",
+        "type": "float",
+        "regex": ".*"
+    },
+    "*Work Mode": {
+        "address": "marstek/select/marstek_user_work_mode/state",
+        "type": "string",
+        "regex": ".*"
+    },
+
+    "outputs": [
+       {
+           "address": "POST http://lilygo-rs485/number/marstek_forcible_charge_power/set?value=${charge_power_w}"
+       },
+       {
+           "address": "POST http://lilygo-rs485/number/marstek_forcible_discharge_power/set?value=${discharge_power_w}"
+       },
+       {
+           "address": "POST http://lilygo-rs485/select/marstek_forcible_charge_discharge/set?option=${if charge_power_w > 0`charge`discharge}"
+       }
+    //    {
+    //         "address": "POST http://lilygo-rs485/select/marstek_user_work_mode/set?option=${if _num_charging > 0`manual`anti-feed}"
+    //    }
+    ]
+ }
+ 
